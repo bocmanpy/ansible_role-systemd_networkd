@@ -1,0 +1,48 @@
+- name: "Systemd-networkd: get networkd uid/gid"
+  ansible.builtin.set_fact:
+    systemd_networkd_user:
+      "{{ lookup('ansible.builtin.vars', 'systemd_networkd_user') |
+      ansible.builtin.mandatory(msg='Variable
+      systemd_networkd_user not defined') }}"
+- name: "Systemd-networkd: get networkd directory"
+  ansible.builtin.set_fact:
+    systemd_networkd_directory:
+      "{{ lookup('ansible.builtin.vars', 'systemd_networkd_directory') |
+      ansible.builtin.mandatory(msg='Variable
+      systemd_networkd_directory not defined') }}"
+- name: "Systemd-networkd: get all interfaces"
+  ansible.builtin.set_fact:
+    systemd_networkd_interfaces:
+      "{{ hostvars[inventory_hostname]['systemd_networkd']['interfaces'] }}"
+    systemd_networkd_interfaces_list:
+      "{{ hostvars[inventory_hostname]['systemd_networkd']['interfaces'] |
+      ansible.builtin.flatten(levels=1) }}"
+    systemd_networkd_interfaces_files: []
+  when:
+    - "hostvars[inventory_hostname]['systemd_networkd']['interfaces']
+        is defined"
+    - "hostvars[inventory_hostname]['systemd_networkd']['interfaces']
+        not in ['', [], '[]', None]"
+- name: "Systemd-networkd: get all interfaces files"
+  ansible.builtin.set_fact:
+    systemd_networkd_interfaces_files:
+      "{{ systemd_networkd_interfaces_files | default([]) + ([item + '.'] |
+      ansible.builtin.product(
+      (lookup('ansible.builtin.vars', 'systemd_networkd_interfaces',
+      default='')[item]) |
+      ansible.builtin.flatten(levels=1)) | map('join') | list) }}"
+  loop: "{{ lookup('ansible.builtin.vars',
+    'systemd_networkd_interfaces_list', default=[]) }}"
+  when:
+    - "lookup('ansible.builtin.vars', 'systemd_networkd_interfaces',
+      default='')[item] is defined"
+    - "lookup('ansible.builtin.vars', 'systemd_networkd_interfaces',
+      default='')[item] not in ['', [], '[]', None]"
+- name: "Systemd-networkd: create network directory"
+  ansible.builtin.file:
+    path: "{{ lookup('ansible.builtin.vars',
+      'systemd_networkd_directory', default=[]) }}"
+    state: "directory"
+    owner: "{{ lookup('ansible.builtin.vars', 'systemd_networkd_user') }}"
+    group: "{{ lookup('ansible.builtin.vars', 'systemd_networkd_user') }}"
+    mode: "0755"

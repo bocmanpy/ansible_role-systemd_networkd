@@ -1,0 +1,6 @@
+---
+systemd_networkd: []
+systemd_networkd_restart: false
+systemd_networkd_cleanup: false
+systemd_networkd_user: "systemd-network"
+systemd_networkd_directory: "/etc/systemd/network"

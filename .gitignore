@@ -1,0 +1,6 @@
+cache/
+*.py[co]
+*.DS_Store
+*.swp
+*.vscode
+*.ansible

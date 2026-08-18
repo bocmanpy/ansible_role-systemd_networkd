@@ -1,0 +1,11 @@
+{% if 'Match' not in interface_directive_section_list
+and 'netdev' != item %}
+[Match]
+Name={{ outer_item }}
+{% endif %}
+{% for section, options in interface_directive_options.items() %}
+[{{ section }}]
+{% for key, value in options.items() %}
+{{ key }}={{ value }}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,8 @@
+- name: "Systemd_networkd: restart systemd-networkd service"
+  ansible.builtin.systemd:
+    name: "systemd-networkd"
+    state: "restarted"
+  listen: "Restart systemd-networkd"
+  when:
+    - "lookup('ansible.builtin.vars', 'systemd_networkd_restart', default='false')
+      == true"
