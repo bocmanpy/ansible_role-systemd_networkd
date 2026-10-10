@@ -41,7 +41,8 @@
   loop: "{{ lookup('ansible.builtin.vars', 'systemd_networkd_interfaces')
     [outer_item] | ansible.builtin.flatten(levels=1) }}"
   loop_control:
-    label: "{{ 'Systemd-networkd: deploy interface: [' + outer_item + '.' + item + ']'}}"
+    label: "{{ 'Systemd-networkd: deploy interface:
+      [' + outer_item + '.' + item + ']'}}"
   vars:
     interface_directive_options: "{{ lookup('ansible.builtin.vars',
       'systemd_networkd_interfaces')[outer_item][item] }}"

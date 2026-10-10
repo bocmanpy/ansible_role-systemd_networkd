@@ -1,3 +1,4 @@
+---
 - name: "Systemd-networkd: get networkd uid/gid"
   ansible.builtin.set_fact:
     systemd_networkd_user:
